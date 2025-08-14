@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&family=Port+Lligat+Sans&display=swap" rel="stylesheet">
+    <title>Mitra the Voice Assistance</title>
+    <style>
+        /* Your existing styles */
+        body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    position: relative;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row; /* Keeps the left-right layout */
+    background: linear-gradient(135deg, #4b79a1, #283e51); /* Gradient background */
+    background-size: cover; /* Ensures the gradient covers the entire background */
+    background-position: center; /* Centers the gradient */
+}
+
+.left-side {
+    width: 35%; /* Adjust the left side to 35% */
+    padding: 20px;
+    overflow-y: auto; /* Allow scrolling if the content overflows */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center the content vertically */
+    align-items: center; /* Center the content horizontally */
+    background: rgba(255, 255, 255, 0.8); /* Slight white background for contrast */
+    border-radius: 1px; /* Rounded corners */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Soft shadow */
+}
+
+.right-side {
+    width: 65%; /* Adjust the right side (map) to 65% */
+    height: 100%;
+    position: relative;
+    background: rgba(0, 0, 0, 0.4); /* Semi-transparent overlay for depth */
+}
+
+.hero-section {
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+    align-items: center; /* Center horizontally */
+    justify-content: center; /* Center vertically */
+    text-align: center; /* Center text */
+    margin-top: 50px;
+    color: white; /* Text color */
+}
+
+h1 {
+    font-family: "Cinzel", Arial, Helvetica, sans-serif;
+    color: rgb(0, 13, 255);
+    margin: 0;
+    font-size: 80px;
+    text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow for better visibility */
+}
+
+.home {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: linear-gradient(135deg, #27ae60, #2ecc71); /* Gradient green */
+    color: white;
+    border: none;
+    padding: 16px;
+    font-size: 16px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* Soft shadow */
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.home:hover {
+    background: linear-gradient(135deg, #2ecc71, #27ae60); /* Reverse gradient on hover */
+    transform: translateY(-2px); /* Lift effect */
+}
+
+.home:active {
+    transform: translateY(1px); /* Slight indentation on click */
+}
+
+.dropdown {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.dropbtn {
+    background-color: #3498db;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.dropbtn:hover {
+    background-color: #2980b9;
+    transform: scale(1.05); /* Slight scale effect */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* Soft shadow on hover */
+}
+
+.dropbtn:active {
+    background-color: #1f6fa2;
+    transform: scale(1) translateY(1px); /* Reset scale and indent on click */
+}
+
+.gif-container {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center; /* Horizontally center the GIF */
+}
+
+.gif-container img {
+    max-width: 150px; /* Set the maximum width of the gif */
+    height: auto;
+    transition: transform 0.2s ease;
+}
+
+#map-container {
+    width: 100%;
+    height: 100%;
+    border: 2px solid #ccc;
+    border-radius: 1px;
+}
+
+iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 8px;
+}
+
+#voice-control {
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    background-color: #3498DB;
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    border: none;
+}
+
+#voice-control:hover {
+    background-color: white;
+    color: #3498DB;
+    border: 2px solid #3498DB;
+}
+
+#to-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+#to {
+    padding-right: 40px;
+    font-size: 20px;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    transition: padding 0.3s ease, width 0.3s ease;
+}
+
+#microphone-icon {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+}
+
+#microphone-icon img {
+    width: 30px;
+    height: 30px;
+}
+
+#microphone-icon.on img {
+    width: 40px;
+    height: 40px;
+}
+
+#microphone-icon img {
+    transition: width 0.3s, height 0.3s;
+}
+
+#toLabel {
+    margin-right: 10px;
+}
+
+.button {
+    margin-top: 10px;
+    margin-left: 30px;
+}
+
+/* Show Route Button */
+#showRouteBtn {
+    background: linear-gradient(135deg, #3498db, #2980b9); /* Gradient blue */
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+#showRouteBtn:hover {
+    background: linear-gradient(135deg, #2980b9, #3498db); /* Reverse gradient on hover */
+    transform: translateY(-2px); /* Lift effect */
+}
+
+#showRouteBtn:active {
+    transform: translateY(1px); /* Slight indentation on click */
+}
+
+/* Find Nearest Station Button */
+#findNearestBtn {
+    background: linear-gradient(135deg, #2ecc71, #27ae60); /* Green gradient */
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+#findNearestBtn:hover {
+    background: linear-gradient(135deg, #27ae60, #2ecc71); /* Reverse gradient on hover */
+    transform: translateY(-2px); /* Lift effect */
+}
+
+#findNearestBtn:active {
+    transform: translateY(1px); /* Slight indentation on click */
+}
+
+/* FAQ Button */
+#faqBtn {
+    position: absolute;
+    top: 10px;
+    left: 490px;
+    background: linear-gradient(135deg, #e74c3c, #c0392b); /* Red gradient */
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+#faqBtn:hover {
+    background: linear-gradient(135deg, #c0392b, #e74c3c); /* Reverse gradient on hover */
+    transform: translateY(-2px); /* Lift effect */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* Soft shadow on hover */
+}
+
+#faqBtn:active {
+    background: linear-gradient(135deg, #c0392b, #e74c3c); /* Reverse gradient */
+    transform: translateY(1px); /* Slight indentation on click */
+}
+
+/* Loading screen styles */
+#loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    font-size: 24px;
+    color: #3498DB;
+}
+
+#loading-screen img {
+    max-width: 200px; /* Adjust the size of the loading gif */
+    height: auto;
+    margin-bottom: 20px;
+}
+
+.robot {
+    height: 150px;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 50%;
+    text-align: center;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    
+    right: 10px;
+    font-size: 20px;
+    cursor: pointer;
+}
+        /* Open chatbot button */
+        #open-chatbot {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            padding: 15px 25px;
+            background-color: #27ae60;
+            color: white;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        #open-chatbot:hover {
+            background-color: #2ecc71;
+            transform: scale(1.05);
+        }
+    </style>
+    <!-- Google Places API script -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDMAJJvk9Z-61tMkJf0mbHUw9cBZg59Tdk&libraries=places"></script>
+</head>
+<body>
+    <!-- Loading screen -->
+    <div id="loading-screen">
+        <img src="train.gif" alt="Loading...">
+        Loading, please wait...
+    </div>
+    <div id="nearest-station-modal" class="modal" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h2>Nearest Station</h2>
+            <p id="station-details"></p>
+        </div>
+    </div>
+    <div class="left-side">
+        <div class="hero-section">
+            <button class="home">Home</button>
+            <!-- FAQ button is now in the top-right corner -->
+            <button id="faqBtn" onclick="showFAQ()">FAQ</button>
+        </div>
+        <div class="hero-section">
+            <h1 id="title" class="title">MITHRA</h1>
+            <div class="gif-container">
+                <img src="gif2.gif" alt="Animated Robot GIF" class="robot">
+            </div>
+        </div>
+
+        <div id="controls">
+            <div style="display: flex; align-items: center;">
+                <label for="to" id="toLabel">To:</label>
+                <div id="to-container">
+                    <input type="text" id="to" placeholder="Enter Station">
+                    <div id="microphone-icon" onclick="toggleMicrophone()">
+                        <img id="microphone-img" src="microphone.png" alt="Microphone Icon" class="microphone">
+                    </div>
+                </div>
+            </div>
+            <button onclick="showRoute()" class="button" id="showRouteBtn">Show Route</button>
+            <button onclick="getNearestStation()" id="findNearestBtn" class="nearest">Find Nearest Station</button>
+        </div>
+    </div>
+
+    <div class="right-side">
+        <div id="map-container">
+            <iframe src="metro.html" title="Metro Map"></iframe>
+        </div>
+    </div>
+    <button id="open-chatbot" onclick="window.location.href='http://127.0.0.1:5000/';">Go to Chatbot</button>
+
+
+    <script>
+         document.getElementById("open-chatbot").addEventListener("click", function () {
+            const chatbotContainer = document.getElementById("chatbot-container");
+
+            // Show the left-side container
+            chatbotContainer.style.display = "block";
+
+            // Load the chatbot content dynamically
+            chatbotContainer.innerHTML = `
+                <iframe src="/" style="width: 100%; height: 100%; border: none;"></iframe>
+            `;
+        });
+        let isRecognizing = false;
+        let recognition;
+        // Check if the browser supports Web Speech API
+        if ('webkitSpeechRecognition' in window) {
+            recognition = new webkitSpeechRecognition();
+            recognition.lang = 'en-US';
+            recognition.continuous = false;
+            recognition.interimResults = true;
+
+            recognition.onstart = function() {
+                console.log('Speech recognition started');
+            };
+
+            recognition.onresult = function(event) {
+                let transcript = event.results[0][0].transcript;
+                document.getElementById('to').value = transcript;
+            };
+
+            recognition.onerror = function(event) {
+                console.error('Speech recognition error:', event.error);
+            };
+
+            recognition.onend = function() {
+                console.log('Speech recognition ended');
+            };
+        }
+
+        // Toggle microphone functionality
+        function toggleMicrophone() {
+            const microphoneIcon = document.getElementById('microphone-icon');
+            const microphoneImg = document.getElementById('microphone-img');
+            microphoneIcon.classList.toggle('on');
+
+            if (microphoneIcon.classList.contains('on')) {
+                microphoneImg.src = 'microphone.gif'; // Change to active microphone
+                if (recognition && !isRecognizing) {
+                    recognition.start(); // Start speech recognition
+                    isRecognizing = true;
+                }
+            } else {
+                microphoneImg.src = 'microphone.png'; // Change back to default microphone
+                if (recognition && isRecognizing) {
+                    recognition.stop(); // Stop speech recognition
+                    isRecognizing = false;
+                }
+            }
+        }
+
+        function showRoute() {
+            const toStation = document.getElementById("to").value;
+
+            if (!toStation) {
+                alert("Please select a 'To' station.");
+                return;
+            }
+
+            if (!userLocation) {
+                alert("Unable to get your current location.");
+                return;
+            }
+
+            const iframe = document.querySelector("iframe");
+            iframe.contentWindow.postMessage({ userLocation, toStation }, '*');
+        }
+        function openModal() {
+    const modal = document.getElementById('nearest-station-modal');
+    modal.style.display = 'flex';
+}
+
+// Function to close the modal
+function closeModal(event) {
+    if (event) {
+        const modalContent = document.querySelector('.modal-content');
+        if (modalContent && modalContent.contains(event.target)) {
+            return;
+        }
+    }
+    const modal = document.getElementById('nearest-station-modal');
+    modal.style.display = 'none';
+}
+const stations = [
+    { name: "Chennai International Airport", lat: 12.980826, lon: 80.1642 },
+    { name: "Meenambakkam", lat: 12.987656, lon: 80.176505 },
+    { name: "OTA-Nanganallur Road", lat: 12.999933, lon: 80.193985 },
+    { name: "Alandur", lat: 13.004713, lon: 80.20145 },
+    { name: "Guindy", lat: 13.00924, lon: 80.213199 },
+    { name: "Little Mount", lat: 13.014712, lon: 80.223993 },
+    { name: "Saidapet", lat: 13.023717, lon: 80.228208 },
+    { name: "Nandanam", lat: 13.03139, lon: 80.239969 },
+    { name: "Teynampet", lat: 13.037904, lon: 80.247029 },
+    { name: "AG-DMS", lat: 13.044682, lon: 80.248052 },
+    { name: "Thousand Lights", lat: 13.058198, lon: 80.258056 },
+    { name: "LIC", lat: 13.064511, lon: 80.266065 },
+    { name: "Government Estate", lat: 13.069557, lon: 80.272842 },
+    { name: "Chennai Central", lat: 13.081426, lon: 80.272887 },
+    { name: "High Court", lat: 13.087369, lon: 80.285021 },
+    { name: "Mannadi", lat: 13.095177, lon: 80.286164 },
+    { name: "Washermenpet", lat: 13.107064, lon: 80.280528 },
+    { name: "Theagaraya College", lat: 13.116, lon: 80.284 },
+    { name: "Tondiarpet", lat: 13.124, lon: 80.289 },
+    { name: "New Washermenpet", lat: 13.13498, lon: 80.29327 },
+    { name: "Tollgate", lat: 13.143, lon: 80.296 },
+    { name: "Kaladipet", lat: 13.151, lon: 80.299 },
+    { name: "Tiruvottiyur Theradi", lat: 13.15977258, lon: 80.30244886 },
+    { name: "Tiruvottiyur", lat: 13.172, lon: 80.305 },
+    { name: "Wimco Nagar", lat: 13.17915, lon: 80.30767 },
+    { name: "Wimco Nagar Depot", lat: 13.1842985, lon: 80.30909273 },
+    { name: "Egmore", lat: 13.079059, lon: 80.261098 },
+    { name: "Nehru Park", lat: 13.078625, lon: 80.250855 },
+    { name: "Kilpauk", lat: 13.077508, lon: 80.242867 },
+    { name: "Pachaiyappa's College", lat: 13.07557, lon: 80.232347 },
+    { name: "Shenoy Nagar", lat: 13.078697, lon: 80.225133 },
+    { name: "Anna Nagar East", lat: 13.084794, lon: 80.21866 },
+    { name: "Anna Nagar Tower", lat: 13.084975, lon: 80.208727 },
+    { name: "Thirumangalam", lat: 13.085259, lon: 80.201575 },
+    { name: "Koyambedu", lat: 13.073708, lon: 80.194869 },
+    { name: "CMBT", lat: 13.068568, lon: 80.203882 },
+    { name: "Arumbakkam", lat: 13.062058, lon: 80.211581 },
+    { name: "Vadapalani", lat: 13.050825, lon: 80.212242 },
+    { name: "Ashok Nagar", lat: 13.035534, lon: 80.21114 },
+    { name: "Ekkattuthangal", lat: 13.017044, lon: 80.20594 },
+    { name: "St. Thomas Mount", lat: 12.995128, lon: 80.19864 }
+];
+
+function calculateDistance(lat1, lon1, lat2, lon2) {
+    const R = 6371; // Radius of the Earth in km
+    const dLat = (lat2 - lat1) * (Math.PI / 180);
+    const dLon = (lon2 - lon1) * (Math.PI / 180);
+    const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(lat1 * (Math.PI / 180)) *
+        Math.cos(lat2 * (Math.PI / 180)) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c; // Distance in km
+}
+// Function to get the nearest station
+function getNearestStation() {
+    if (!userLocation) {
+        alert("Unable to get your current location.");
+        return;
+    }
+
+    let nearestStation = null;
+    let minDistance = Infinity;
+
+    // Find the nearest station by comparing distances
+    stations.forEach((station) => {
+        const distance = calculateDistance(
+            userLocation.lat,
+            userLocation.lng,
+            station.lat,
+            station.lon
+        );
+        if (distance < minDistance) {
+            minDistance = distance;
+            nearestStation = station;
+        }
+    });
+
+    if (nearestStation) {
+        document.getElementById("station-details").textContent = 
+            `Station: ${nearestStation.name}\nDistance: ${minDistance.toFixed(2)} km`;
+        openModal();
+    } else {
+        document.getElementById("station-details").textContent = 
+            "No nearby stations found.";
+        openModal();
+    }
+}
+
+
+
+// Inside the iframe's script (e.g., metro.html), handle the message event:
+window.addEventListener('message', (event) => {
+    if (event.data.action === "displayStation") {
+        const { location, name, vicinity } = event.data;
+
+        // Update the map to show the station
+        const map = new google.maps.Map(document.getElementById('map'), {
+            center: location,
+            zoom: 14,
+        });
+
+        new google.maps.Marker({
+            position: location,
+            map,
+            title: `${name}\n${vicinity}`,
+        });
+    }
+});
+
+
+        function showFAQ() {
+            window.location.href = "faq.html"; 
+        }
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                
+                (position) => {
+                    userLocation = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+
+                    // Post the user's location to the iframe
+                    const iframe = document.querySelector("iframe");
+                    iframe.contentWindow.postMessage({ userLocation }, '*');
+                },
+                (error) => {
+                    let errorMessage = "Unable to retrieve your location.";
+                    if (error.code === error.PERMISSION_DENIED) {
+                        errorMessage = "You denied the request for your location.";
+                    } else if (error.code === error.POSITION_UNAVAILABLE) {
+                        errorMessage = "Location information is unavailable.";
+                    } else if (error.code === error.TIMEOUT) {
+                        errorMessage = "The request to get user location timed out.";
+                    }
+                    alert(errorMessage);
+                },
+                { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+            );
+        } else {
+            alert("Geolocation is not supported by this browser.");
+        }
+
+        // Initialize Google Places Autocomplete
+        function initializeAutocomplete() {
+    const input = document.getElementById('to');
+    const autocomplete = new google.maps.places.Autocomplete(input, {
+        componentRestrictions: { country: 'in' }, // Restrict to India
+        fields: ['place_id', 'geometry', 'name'], // Specify the fields to fetch
+    });
+
+    const bounds = new google.maps.LatLngBounds(
+        new google.maps.LatLng(8.071, 76.182), // Southwest corner of Tamil Nadu
+        new google.maps.LatLng(13.554, 80.353)  // Northeast corner of Tamil Nadu
+    );
+
+    autocomplete.setBounds(bounds);
+}
+
+
+        // Hide loading screen once the page is fully loaded
+        window.onload = function() {
+            document.getElementById('loading-screen').style.display = 'none';
+            initializeAutocomplete();
+        };
+        let translations = {
+    tamil: {
+        title: "மித்ரா",
+        faq: "கேள்விகள்",
+        home: "முகப்பு",
+        placeholder: "நிலையத்தை உள்ளிடவும்",
+        showRoute: "வழியை காண்பி",
+        findNearest: "அருகிலுள்ள நிலையத்தை காண்க",
+        nearestStation: "அருகிலுள்ள நிலையம்",
+    },
+    hindi: {
+        title: "मित्रा",
+        faq: "प्रश्न",
+        home: "मुखपृष्ठ",
+        placeholder: "स्टेशन दर्ज करें",
+        showRoute: "मार्ग दिखाएं",
+        findNearest: "निकटतम स्टेशन खोजें",
+        nearestStation: "निकटतम स्टेशन",
+    },
+    english: {
+        title: "MITHRA",
+        faq: "FAQ",
+        home: "Home",
+        placeholder: "Enter Station",
+        showRoute: "Show Route",
+        findNearest: "Find Nearest Station",
+        nearestStation: "Nearest Station",
+    },
+};
+
+function updateLanguage(language) {
+    const elements = {
+        title: document.getElementById("title"),
+        faq: document.getElementById("faqBtn"),
+        home: document.querySelector(".home"),
+        placeholder: document.getElementById("to"),
+        showRoute: document.getElementById("showRouteBtn"),
+        findNearest: document.getElementById("findNearestBtn"),
+    };
+
+    const selectedLang = translations[language];
+
+    if (selectedLang) {
+        elements.title.textContent = selectedLang.title;
+        elements.faq.textContent = selectedLang.faq;
+        elements.home.textContent = selectedLang.home;
+        elements.placeholder.placeholder = selectedLang.placeholder;
+        elements.showRoute.textContent = selectedLang.showRoute;
+        elements.findNearest.textContent = selectedLang.findNearest;
+    }
+}
+
+// Extend the recognition.onresult logic
+recognition.onresult = function (event) {
+    let transcript = event.results[0][0].transcript.trim().toLowerCase();
+    console.log("Heard:", transcript);
+
+    // Handle language keywords
+    if (transcript === "tamil") {
+        updateLanguage("tamil");
+    } else if (transcript === "hindi") {
+        updateLanguage("hindi");
+    } else if (transcript === "english") {
+        updateLanguage("english");
+    } else {
+        // Only update the text box for non-language keywords
+        document.getElementById("to").value = transcript;
+    }
+};
+
+
+    </script>
+</body>
+</html>
